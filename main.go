@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -8,11 +9,23 @@ import (
 )
 
 func main() {
+	flag.Parse()
+	args := flag.Args()
+	if len(args) > 0 {
+		url := args[0]
+		fmt.Println("URL", url)
+		parsePage(url)
+	} else {
+		fmt.Println("no args")
+	}
+}
+
+func parsePage(url string) {
 	client := &http.Client{
 		Timeout: 5 * time.Second,
 	}
 
-	resp, err := client.Get("https://georgerodier.com")
+	resp, err := client.Get(url)
 	if err != nil {
 		panic(err)
 	}
@@ -27,4 +40,5 @@ func main() {
 	}
 
 	fmt.Println(string(body))
+
 }
